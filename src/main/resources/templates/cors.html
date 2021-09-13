@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>cors</title>
+    <script>
+        function test() {
+            let xhr = new XMLHttpRequest()
+            xhr.open("http://localhost:8081/cors")
+            xhr.send()
+
+            xhr.onreadystatechange = function () {
+                if (xhr.status === 200 && xhr.readyState === 4) {
+                    console.log(xhr.responseText)
+                    document.getElementById("msg").innerText = xhr.responseText
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+<h1>cors test</h1>
+<input type="button" value="点击发送请求" onclick="test()">
+<h4 id="msg"></h4>
+</body>
+</html>

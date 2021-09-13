@@ -1,0 +1,25 @@
+spring:
+  profiles:
+    active: dev
+
+logging:
+  level:
+    root: info # 全局日志
+    com.example.mapper: debug # 指定包日志级别配置
+    org:
+      springframework: info
+  file:
+    name: run.log # 日志文件名称
+    path: ./logs # 日志文件位置
+
+
+# 用 --- 多个配置
+
+---
+server:
+  port: 8081
+
+---
+
+server:
+  port: 8082
