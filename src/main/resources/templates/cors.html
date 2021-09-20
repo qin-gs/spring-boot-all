@@ -6,7 +6,7 @@
     <script>
         function test() {
             let xhr = new XMLHttpRequest()
-            xhr.open("http://localhost:8081/cors")
+            xhr.open('get', "http://localhost:8081/cors")
             xhr.send()
 
             xhr.onreadystatechange = function () {
