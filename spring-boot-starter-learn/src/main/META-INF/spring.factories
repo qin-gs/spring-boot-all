@@ -1,0 +1,3 @@
+# 声明配置文件的位置
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.example.module.HelloServiceAutoConfig
