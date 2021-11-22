@@ -12,7 +12,7 @@ import java.io.IOException;
 /**
  * 注册拦截器的方法
  * <p>
- * 1. WebFilter 注解(servlet3.0)
+ * 1. WebFilter注解 + ServletComponentScan (servlet3.0)
  * 2. FilterRegistrationBean
  */
 @WebFilter(urlPatterns = "/*", filterName = "myFilter")
