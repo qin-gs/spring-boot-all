@@ -31,7 +31,7 @@ SpringBoot配置属性加载优先级及顺序(优先级逐渐降低)
 1. 在您的主目录（当 devtools 被激活，则为 ~/.spring-boot-devtools.properties ）中的 Devtools 全局设置属性。
 2. 在测试中使用到的 @TestPropertySource 注解。
 3. 在测试中使用到的 properties 属性，可以是 @SpringBootTest和用于测试应用程序某部分的测试注解。
-4. **命令行参数 --server.prot=8081。**
+4. **命令行参数 --server.port=8081。**
 5. 来自 SPRING_APPLICATION_JSON 的属性（嵌入在环境变量或者系统属性【system propert】中的内联 JSON）。
 6. ServletConfig 初始化参数。
 7. ServletContext 初始化参数。
