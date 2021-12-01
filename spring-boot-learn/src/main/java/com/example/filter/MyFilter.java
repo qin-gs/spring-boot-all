@@ -1,5 +1,8 @@
 package com.example.filter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -18,6 +21,8 @@ import java.io.IOException;
 @WebFilter(urlPatterns = "/*", filterName = "myFilter")
 public class MyFilter implements Filter {
 
+    private static final Logger log = LoggerFactory.getLogger(MyFilter.class);
+
     private FilterConfig config;
 
     @Override
@@ -27,6 +32,7 @@ public class MyFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        System.out.println("a filter");
+        log.debug("a filter");
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 }

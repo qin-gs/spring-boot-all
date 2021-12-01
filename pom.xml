@@ -78,7 +78,7 @@
             <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-jasper</artifactId>
-                <!--<version>8.5.71</version>-->
+                <version>7.0.76</version>
                 <!-- 当前环境可用，不参与打包 如果打war包时-->
                 <scope>provided</scope>
             </dependency>

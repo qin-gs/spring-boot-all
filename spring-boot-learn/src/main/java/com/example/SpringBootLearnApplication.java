@@ -8,11 +8,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @EnableAsync
 @SpringBootApplication
+@EnableCaching // 开启缓存支持
 // @MapperScan("com.example.mapper") // @Mapper 使用一个就行
 // 如果打成war包，需要这样写
 // public class SpringBootLearnApplication extends SpringBootServletInitializer {
