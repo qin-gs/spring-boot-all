@@ -27,7 +27,7 @@ web项目的入口在tomcat(不能用main方法new AnnotationConfigApplicationCo
 配置servlet，或使用@WebServlet注解(servlet2.6加入，tomcat7及以上支持)(websocket只能运行在tomcat8及以上)
 <servlet>
 	<servlet-name>spring mvc</servlet-name>
-  <servlet-class>org.springframework.web.sevlet.DispatcherServlet</servlet-class>
+  <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
   <init-param>
   	<param-name>contextConfigLocation</param-name>
     <param-value>classpath:spring-mvc.xml</param-value>
