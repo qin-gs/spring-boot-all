@@ -26,6 +26,9 @@ spring:
     cache: false
     prefix: classpath:/templates/
     suffix: .html
+  jackson:
+    serialization:
+      indent_output: true
 
 mybatis:
   type-aliases-package: com.example.bean
@@ -43,3 +46,12 @@ user:
     - b
     - ${user.name:defaultName} # :后面是默认值
   map: { k1: v1, k2: v2 }
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
