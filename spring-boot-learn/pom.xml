@@ -111,7 +111,8 @@
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.2.11</version>
         </dependency>
 
         <dependency>

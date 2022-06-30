@@ -1,8 +1,7 @@
-package com.example.yaml;
+package com.example.test.yaml;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 
 @DisplayName("yaml 文件读取")
 public class YamlTest {

@@ -1,4 +1,4 @@
-package com.example;
+package com.example.test;
 
 import com.example.bean.User;
 import org.junit.jupiter.api.Test;

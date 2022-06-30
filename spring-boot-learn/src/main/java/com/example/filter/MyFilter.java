@@ -17,6 +17,7 @@ import java.io.IOException;
  * <p>
  * 1. WebFilter注解 + ServletComponentScan (servlet3.0)
  * 2. FilterRegistrationBean
+ * 3. ServletContextInitializer 接口
  */
 @WebFilter(urlPatterns = "/*", filterName = "myFilter")
 public class MyFilter implements Filter {
