@@ -135,9 +135,9 @@ springboot中如何实现上述功能
 
    
 
+https://zhuanlan.zhihu.com/p/144015252
 
-
-
+https://zhuanlan.zhihu.com/p/301063931
 
 
 
@@ -197,19 +197,19 @@ SpringBoot配置属性加载优先级及顺序(优先级逐渐降低)
 
 
 
+**构造函数**
+
 SpringApplication 的构造函数读取 classpath下所有的 `spring.factories` 配置文件
 
 - 配置应用程序启动前的初始化对象
 
   创建 `ApplicationContextInitializer` 接口的实现类
 
-- 配置应用程序启动前的监听器
+- 配置应用程序启动前的监听器 (7 个)
 
   创建 `ApplicationListener` 接口的实现类
 
-
-
-
+**run**
 
 ```java
 // SpringApplication.java
@@ -222,21 +222,21 @@ public ConfigurableApplicationContext run(String... args) {
     ConfigurableApplicationContext context = null;
     // exceptionReporters集合用来存储异常报告器，用来报告SpringBoot启动过程的异常
     Collection<SpringBootExceptionReporter> exceptionReporters = new ArrayList<>();
-    // 配置headless属性，即“java.awt.headless”属性，默认为ture
+    // 配置“java.awt.headless”属性，默认为ture
     // 其实是想设置该应用程序,即使没有检测到显示器,也允许其启动.对于服务器来说,是不需要显示器的,所以要这样设置.
     configureHeadlessProperty();
-    // 【1】从 META-INF/spring.factories 配置文件中加载到 EventPublishingRunListener 对象(只有一个)
+    // 【1】从 META-INF/spring.factories 配置文件中加载并创建 EventPublishingRunListener 对象，会触发构造函数 (将上面加载的监听器放入 Multicaster)
     // 该对象主要用来发布 SpringBoot 启动过程中内置的一些生命周期事件，标志每个不同启动阶段
     SpringApplicationRunListeners listeners = getRunListeners(args);
     // 启动 SpringApplicationRunListener 的监听，表示SpringApplication开始启动。
-    // 》》》》》发布【ApplicationStartingEvent】事件
+    // 通过 SimpleApplicationEventMulticaster 发布【ApplicationStartingEvent】事件
     listeners.starting();
     try {
         // 创建 ApplicationArguments 对象，封装了 args 参数
         ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
         // 【2】读取application.properties 或者 application.yml文件，准备环境变量(StandardServletEnvironment)，包括系统变量，环境变量，profile，命令行参数，默认变量，servlet相关配置变量，随机值
         // JNDI属性值，以及配置文件（比如application.properties）等，注意这些环境变量是有优先级的
-        // 》》》》》发布【ApplicationEnvironmentPreparedEvent】事件
+        // 发布【ApplicationEnvironmentPreparedEvent】事件
         ConfigurableEnvironment environment = prepareEnvironment(listeners,
                 applicationArguments);
         // 配置spring.beaninfo.ignore属性，默认为true，即跳过搜索BeanInfo classes.
@@ -244,38 +244,38 @@ public ConfigurableApplicationContext run(String... args) {
         // 【3】控制台打印SpringBoot的bannner标志
         Banner printedBanner = printBanner(environment);
         // 【4】根据不同类型创建不同类型的spring applicationcontext容器
-        // 因为这里是servlet环境，所以创建的是AnnotationConfigServletWebServerApplicationContext容器对象
+        // 因为这里是servlet环境，所以创建的是AnnotationConfigServletWebServerApplicationContext 容器对象
         context = createApplicationContext();
         // 【5】从spring.factories配置文件中加载异常报告期实例，这里加载的是FailureAnalyzers
-        // 注意FailureAnalyzers的构造器要传入ConfigurableApplicationContext，因为要从context中获取beanFactory和environment
+        // 注意 FailureAnalyzers 的构造器要传入 ConfigurableApplicationContext，因为要从 context 中获取 beanFactory 和 environment
         exceptionReporters = getSpringFactoriesInstances(
                 SpringBootExceptionReporter.class,
                 new Class[] { ConfigurableApplicationContext.class }, context); // ConfigurableApplicationContext是AnnotationConfigServletWebServerApplicationContext的父接口
-        // 【6】为刚创建的AnnotationConfigServletWebServerApplicationContext容器对象做一些初始化工作，准备一些容器属性值等
-        // 1）为AnnotationConfigServletWebServerApplicationContext的属性AnnotatedBeanDefinitionReader和ClassPathBeanDefinitionScanner设置environgment属性
-        // 2）根据情况对ApplicationContext应用一些相关的后置处理，比如设置resourceLoader属性等
-        // 3）在容器刷新前调用各个ApplicationContextInitializer的初始化方法，ApplicationContextInitializer是在构建SpringApplication对象时从spring.factories中加载的
-        // 4）》》》》》发布【ApplicationContextInitializedEvent】事件，标志context容器被创建且已准备好
-        // 5）从context容器中获取beanFactory，并向beanFactory中注册一些单例bean，比如applicationArguments，printedBanner
-        // 6）TODO 加载bean到application context，注意这里只是加载了部分bean比如mainApplication这个bean，大部分bean应该是在AbstractApplicationContext.refresh方法中被加载？这里留个疑问先
-        // 7）》》》》》发布【ApplicationPreparedEvent】事件，标志Context容器已经准备完成
+        // 【6】为刚创建的 AnnotationConfigServletWebServerApplicationContext 容器对象做一些初始化工作，准备一些容器属性值等
+        // 1）为 AnnotationConfigServletWebServerApplicationContext 的属性 AnnotatedBeanDefinitionReader 和 ClassPathBeanDefinitionScanner 设置 environgment 属性
+        // 2）根据情况对 ApplicationContext 应用一些相关的后置处理，比如设置 resourceLoader 属性等
+        // 3）在容器刷新前调用各个 ApplicationContextInitializer 的初始化方法，ApplicationContextInitializer 是在构建 SpringApplication 对象时从 spring.factories 中加载的
+        // 4）发布【ApplicationContextInitializedEvent】事件，标志context容器被创建且已准备好
+        // 5）从 context 容器中获取 beanFactory，并向 beanFactory 中注册一些单例 bean，比如applicationArguments，printedBanner
+        // 6）将启动类加载到容器中，为自动装配奠定基础
+        // 7）发布【ApplicationPreparedEvent】事件，标志Context容器已经准备完成
         prepareContext(context, environment, listeners, applicationArguments,
                 printedBanner);
         // 【7】刷新容器，这一步至关重要，以后会在分析Spring源码时详细分析，主要做了以下工作：
         // 1）在context刷新前做一些准备工作，比如初始化一些属性设置，属性合法性校验和保存容器中的一些早期事件等；
-        // 2）让子类刷新其内部bean factory,注意SpringBoot和Spring启动的情况执行逻辑不一样
-        // 3）对bean factory进行配置，比如配置bean factory的类加载器，后置处理器等
-        // 4）完成bean factory的准备工作后，此时执行一些后置处理逻辑，子类通过重写这个方法来在BeanFactory创建并预准备完成以后做进一步的设置
-        // 在这一步，所有的bean definitions将会被加载，但此时bean还不会被实例化
-        // 5）执行BeanFactoryPostProcessor的方法即调用bean factory的后置处理器：
+        // 2）让子类刷新其内部 bean factory,注意 SpringBoot 和 Spring 启动的情况执行逻辑不一样
+        // 3）对 bean factory 进行配置，比如配置 bean factory 的类加载器，后置处理器等
+        // 4）完成 bean factory 的准备工作后，此时执行一些后置处理逻辑，子类通过重写这个方法来在 BeanFactory 创建并预准备完成以后做进一步的设置
+        // 在这一步，所有的 bean definitions 将会被加载，但此时bean还不会被实例化
+        // 5）执行 BeanFactoryPostProcessor 的方法即调用 bean factory 的后置处理器：
         // BeanDefinitionRegistryPostProcessor（触发时机：bean定义注册之前）和BeanFactoryPostProcessor（触发时机：bean定义注册之后bean实例化之前）
-        // 6）注册bean的后置处理器BeanPostProcessor，注意不同接口类型的BeanPostProcessor；在Bean创建前后的执行时机是不一样的
-        // 7）初始化国际化MessageSource相关的组件，比如消息绑定，消息解析等
-        // 8）初始化事件发布器，如果bean factory没有包含事件发布器，那么new一个SimpleApplicationEventMulticaster发布器对象并注册到bean factory中
-        // 9）AbstractApplicationContext定义了一个模板方法onRefresh，留给子类覆写，比如ServletWebServerApplicationContext覆写了该方法来创建内嵌的tomcat容器
-        // 10）注册实现了ApplicationListener接口的监听器，之前已经有了事件发布器，此时就可以派发一些early application events
-        // 11）完成容器bean factory的初始化，并初始化所有剩余的单例bean。这一步非常重要，一些bean postprocessor会在这里调用。
-        // 12）完成容器的刷新工作，并且调用生命周期处理器的onRefresh()方法，并且发布ContextRefreshedEvent事件
+        // 6）注册(不执行)bean的后置处理器 BeanPostProcessor，注意不同接口类型的 BeanPostProcessor；在Bean创建前后的执行时机是不一样的
+        // 7）初始化国际化 MessageSource 相关的组件，比如消息绑定，消息解析等
+        // 8）初始化事件发布器，如果 bean factory 没有包含事件发布器，那么new一个SimpleApplicationEventMulticaster 发布器对象并注册到 bean factory中
+        // 9）AbstractApplicationContext 定义了一个模板方法 onRefresh，留给子类覆写，比如ServletWebServerApplicationContext 覆写了该方法来创建内嵌的tomcat容器
+        // 10）注册实现了 ApplicationListener 接口的监听器，之前已经有了事件发布器，此时就可以派发一些 early application events
+        // 11）完成容器 bean factory 的初始化，并初始化所有剩余的单例bean。这一步非常重要，一些bean postprocessor 会在这里调用。
+        // 12）完成容器的刷新工作，并且调用生命周期处理器的 onRefresh() 方法，并且发布 ContextRefreshedEvent 事件
         refreshContext(context);
         // 【8】执行刷新容器后的后置处理逻辑，注意这里为空方法
         afterRefresh(context, applicationArguments);
@@ -313,15 +313,84 @@ public ConfigurableApplicationContext run(String... args) {
 ```
 
 1. 配置属性
+
 2. 获取监听器，发布应用开始启动事件
+
 3. 初始化输入参数
+
 4. 配置环境，输出banner
+
+   共有 4 中实现方式
+
+   - StandardEnvironment：普通程序
+   - StandardServletEnvironment：web 程序
+   - MockEnvironment：测试程序
+   - StandardReactiveWebEnvironment：响应式 web
+
+   TODO 配置文件 application.properties 读取
+
 5. 创建上下文
+
 6. 预处理上下文
+
+   `applyInitializers` 方法会将三个默认的内部类加入 `DefaultListableBeanFactory`
+
+   这三个类是后置处理器 (`AbstractApplicationContext#invokeBeanFactoryPostProcessors`)
+
+   ```
+   //设置配置警告
+   ConfigurationWarningsApplicationContextInitializer$ConfigurationWarningsPostProcessor
+   SharedMetadataReaderFactoryContextInitializer$CachingMetadataReaderFactoryPostProcessor
+   ConfigFileApplicationListener$PropertySourceOrderingPostProcessor
+   ```
+
+   
+
 7. 刷新上下文
+
 8. 再刷新上下文
+
 9. 发布应用已经启动事件
+
 10. 发布应用启动完成事件
+
+
+
+**自动装配**
+
+- prepareContext
+
+  将启动类信息包装成 `AnnotatedGenericBeanDefinition `，添加到容器的 `beanDefinitionMap` 中
+
+- refreshContext ->  `AbstractApplicationContext#refresh` -> `invokeBeanFactoryPostProcessors`
+
+  会拿到 `ConfigurationClassPostProcessor`  (在 `AnnotationConfigServletWebServerApplicationContext `构造函数中注册进去)
+
+  `ConfigurationClassParser#doProcessConfigurationClass` 进行扫描
+
+  `ConfigurationClassParser.DeferredImportSelectorGroupingHandler#processGroupImports` 读取 spring.factories 中的类
+
+
+
+**环境配置**
+
+`SpringApplication#prepareEnvironment`
+
+<img src="../img/ApplicationServletEnvironment继承关系.png" alt="ApplicationServletEnvironment继承关系" style="zoom:75%;" />
+
+- `getOrCreateEnvironment` 创建一个 `ApplicationServletEnvironment`
+
+  构造函数中会加入四个环境`servletConfigInitParams, servletContextInitParams, systemProperties, systemEnvironment`
+
+- `configureEnvironment` ：判断`SpringBootApplication`是否指定了默认配置，加载默认的命令行配置
+
+- 发布 `ApplicationEnvironmentPreparedEvent` 事件，加载配置文件 (`application.properties`)
+
+  `ConfigFileApplicationListener.Loader#loadWithFilteredProperties` 区分 `profile`
+
+  `ConfigFileApplicationListener.Loader#addToLoaded` 将配置放入 `Map`
+
+  2.4 之后的版本改成 `ConfigDataEnvironmentPostProcessor` 加载配置文件
 
 
 
@@ -386,9 +455,34 @@ public ConfigurableApplicationContext run(String... args) {
 
 
 
+#### @ConditionOnXxx 原理
 
+`DefaultListableBeanFactory#getBeanNamesIterator`
 
+- 在spring ioc的过程中，优先解析`@Component，@Service，@Controller`注解的类。其次解析配置类，也就是`@Configuration`标注的类。最后开始解析配置类中定义的 bean。
+- 当执行到配置类解析的时候，`@Component，@Service，@Controller ,@Configuration`标注的类已经全部被解析，所以这些`BeanDifinition`已经被同步。
+- 如果两个Bean都是配置类中Bean，所以此时配置类的解析无法保证先后顺序，就会出现不生效的情况。
 
+```java
+@Configuration
+public class Config1 {
+	// 这里可能会因为顺序导致不生效
+    @Bean
+    @ConditionalOnBean(Bean2.class)
+    public Bean1 bean1() {
+        return new Bean1();
+    }
+}
+
+@Configuration
+public class Config2 {
+
+    @Bean
+    public Bean2 bean2(){
+        return new Bean2();
+    }
+}
+```
 
 
 

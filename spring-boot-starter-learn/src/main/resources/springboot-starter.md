@@ -76,7 +76,7 @@ AutoConfigurationImportSelector
 
 - 所有在配置文件中能配置的属性都是在 xxxxProperties 类中封装着，配置文件可以配置什么内容，可以参照该前缀对应的属性类中的属性字段
 
-  xxxxAutoConfigurartion：自动配置类；给容器中添加组件
+  xxxxAutoConfiguration：自动配置类；给容器中添加组件
   xxxxProperties：封装配置文件中相关属性；**
 
 自动配置类必须在一定的条件下才能生效
