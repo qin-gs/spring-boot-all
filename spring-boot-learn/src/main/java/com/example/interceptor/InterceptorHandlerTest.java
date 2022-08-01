@@ -13,11 +13,11 @@ public class InterceptorHandlerTest implements HandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		System.out.println("InterceptorTest.preHandle");
-		HandlerMethod method = (HandlerMethod) handler;
-		System.out.println("method.getMethod() = " + method.getMethod());
-		System.out.println("method.getMethodParameters() = " + Arrays.toString(method.getMethodParameters()));
-		System.out.println("method.getBeanType() = " + method.getBeanType());
+		// System.out.println("InterceptorTest.preHandle");
+		// HandlerMethod method = (HandlerMethod) handler;
+		// System.out.println("method.getMethod() = " + method.getMethod());
+		// System.out.println("method.getMethodParameters() = " + Arrays.toString(method.getMethodParameters()));
+		// System.out.println("method.getBeanType() = " + method.getBeanType());
 		return true;
 	}
 }

@@ -3,7 +3,7 @@ package com.example.spi;
 import java.util.ServiceLoader;
 
 /**
- * springboot使用spi技术，使用内置tomcat注册DispatcherServlet
+ * springboot 使用 spi 技术，使用内置 tomcat 注册 DispatcherServlet
  */
 public class SpiTest {
 

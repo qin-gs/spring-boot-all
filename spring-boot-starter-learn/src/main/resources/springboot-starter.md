@@ -28,7 +28,7 @@ public @interface SpringBootApplication {}
 @SpringBootConfiguration // 标志这是一个配置类
 @EnableAutoConfiguration // 开启自动配置功能
   @AutoConfigurationPackage
-    @Import(AutoConfigurationPackages.Registrar.class) // 导入 Regsitrar，扫描主配置类所在包下的类注入Spring容器
+    @Import(AutoConfigurationPackages.Registrar.class) // 导入 Registrar，扫描主配置类所在包下的类注入Spring容器
   @Import(AutoConfigurationImportSelector.class) // 导入 Selector，返回将要注入的一系列bean的全限定类名
 ```
 
@@ -52,7 +52,7 @@ AutoConfigurationImportSelector
 
 3. 整个J2EE的整体解决方案和自动配置都在 spring-boot-autoconfigure 的jar包中；
 
-4. 它会给容器中导入非常多的自动配置类 （xxxAutoConfiguration）, 就是给容器中导入这个场景需要的所有组件 ， 并配置好这些组件 ；
+4. 它会给容器中导入非常多的自动配置类 （xxxAutoConfiguration）, 就是给容器中导入这个场景需要的所有组件，并配置好这些组件 ；
 
 5. 有了自动配置类 ， 免去了我们手动编写配置注入功能组件等的工作；
 

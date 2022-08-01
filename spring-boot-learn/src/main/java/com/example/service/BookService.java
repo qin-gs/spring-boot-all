@@ -3,7 +3,6 @@ package com.example.service;
 import com.example.bean.Book;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -34,6 +33,8 @@ public class BookService {
     );
 
     /**
+     * 查找缓存 - 有就返回 -没有就执行方法体 - 将结果缓存起来 (适用于查询数据的方法)
+     * <p>
      * 缓存通过aop实现，方法只能是 public
      * 一个方法A调同一个类里的另一个有缓存注解的方法B，这样是不走缓存的
      * <p>
@@ -53,6 +54,8 @@ public class BookService {
     }
 
     /**
+     * 执行方法体 - 将结果缓存起来 (适用于更新数据的方法)
+     * <p>
      * 方法每次都会被调用，然后将返回值放入缓存
      */
     @CachePut(cacheNames = "books", key = "#book.id")

@@ -1,6 +1,5 @@
 package com.example.run;
 
-import com.example.args.ArgsBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -8,7 +7,8 @@ import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
 /**
- * 可以添加一些项目启动后需要初始化的功能
+ * 可以添加一些项目启动后需要初始化的功能；
+ * CommandLineRunner 先于 ApplicationRunner 执行
  */
 @Component
 public class CommandRun implements CommandLineRunner, Ordered {

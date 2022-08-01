@@ -8,6 +8,9 @@ import org.springframework.boot.jackson.JsonComponent;
 
 import java.io.IOException;
 
+/**
+ * 自定义一些对象的序列化
+ */
 @JsonComponent
 public class MessageSerial {
 

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>file upload</title>
+    <!-- 引入 jquery -->
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <!--引入CSS-->
+    <link rel="stylesheet" type="text/css" th:href="@{/static/webuploader/webuploader.css}">
+    <!--引入JS-->
+    <script type="text/javascript" th:src="@{/static/webuploader/webuploader.js}"></script>
+</head>
+<body>
+<div id="upload-container">
+    <span>上传</span>
+</div>
+<div id="upload-list"></div>
+<button id="picker">点击上传</button>
+</body>
+<script>
+
+    $('#upload-container').click(function (event) {
+        $("#picker").find('input').click();
+    });
+    WebUploader.Uploader.register({
+        "before-send-file": "beforeSendFile",
+        "after-send-file": "afterSendFile"
+    }, {
+        beforeSendFile: function (file) {
+            uploader.md5File(file).progress(function (percentage) {
+                console.log("获取 md5 进度: " + percentage);
+            }).then(function (val) {
+                console.log('md5: ', val);
+                file.md5 = val
+            });
+        },
+        afterSendFile: function (file) {
+            // 上传文件成功后，合并文件
+            console.log('合并文件');
+        }
+    });
+
+    let uploader = WebUploader.create({
+        auto: true,
+        swf: 'https://cdn.bootcss.com/webuploader/0.1.1/Uploader.swf', //swf文件路径
+        server: 'upload',
+        dnd: '#upload-container',
+        pick: '#picker',  //内部根据当前运行创建
+        multiple: true,     //选择多个
+        chunked: true,      //开启分片
+        threads: 20,        //并发数
+        method: 'POST',
+        fileSizeLimit: 1024 * 1024 * 1024, //单个文件大小限制
+        fileSingleSizeLimit: 1024 * 1024 * 1025 * 5,  //总文件大小
+        fileVal: 'upload'
+    });
+
+    uploader.on("beforeFileQueued", function (file) {
+        console.log(file); //获取文件后缀
+    });
+
+    /**
+     * 文件被加入队列之后，可以判断一下 md5
+     */
+    uploader.on('fileQueued', function (file) {
+        //选中文件要做的事
+        console.log(file.ext);
+        console.log(file.size);
+        console.log(file.name);
+        let html = '<div class="upload-item"><span>文件名：' + file.name + '</span><span data-file_id="' + file.id + '"class="btn-delete">删除</span><span data-file_id="' + file.id + '"class="btn-retry">重试</span><div class="percentage ' + file.id + '" style="width: 0%;"></div></div>'
+        $('#upload-list').append(html);
+        uploader.md5File(file)  //给文件定义唯一的md5值，当再次上传相同文件时，就不用传了  大文件秒传实际上是没传，直接拷贝之前文件地址
+            //显示进度
+            .progress(function (percentage) {
+                console.log('Percentage:', percentage);
+            })
+            //完成
+            .then(function (val) {
+                console.log('md5 result', val);
+            });
+
+        // 这里可以暂停上传，手动点击按钮
+        // uploader.stop();
+    });
+
+    /**
+     * 点击按钮，开始上传
+     */
+    $('#aButton').on('click', function () {
+        uploader.upload();
+    });
+
+    // 文件上传成功
+    uploader.on("uploadSuccess", function (file, response) {
+        console.log(response);
+    });
+
+</script>
+</html>

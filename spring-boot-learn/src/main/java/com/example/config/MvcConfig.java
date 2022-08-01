@@ -1,22 +1,25 @@
 package com.example.config;
 
-import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.example.interceptor.InterceptorHandlerTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
-// 用WebMvcConfigurer接口 扩展spring mvc
-// 如果用@EnableWebMvc 会全面接管mvc
-@Configuration
-@EnableWebMvc
+/**
+ * 用WebMvcConfigurer接口 扩展spring mvc，
+ * 如果用@EnableWebMvc 会全面接管mvc，application.properties 中配置的 spring.mvc 等参数会失效
+ */
+// @Configuration
+// @EnableWebMvc
 public class MvcConfig implements WebMvcConfigurer {
 
     /**
@@ -46,6 +49,11 @@ public class MvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(new FastJsonHttpMessageConverter());
+        converters.add(new MappingJackson2HttpMessageConverter());
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
     }
 }

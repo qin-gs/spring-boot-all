@@ -55,3 +55,6 @@ management:
   endpoint:
     health:
       show-details: always
+
+upload:
+  path: E:\\

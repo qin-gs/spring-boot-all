@@ -16,8 +16,8 @@ public class BeanConfig {
      * 注册过滤器第二种方式
      */
     @Bean
-    public FilterRegistrationBean registrationBean() {
-        FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean<>();
+    public FilterRegistrationBean<MyFilter> registrationBean() {
+        FilterRegistrationBean<MyFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new MyFilter());
         registrationBean.addUrlPatterns("/*");
         registrationBean.setName("myFilter");
